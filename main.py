@@ -14,7 +14,6 @@ async def read_users():
     try:
         await db.connect()
         users = await db.read_users()
-        print(users)
         return BaseResponse(status=True, body=list(users), error="null")
 
     except Exception as e:
