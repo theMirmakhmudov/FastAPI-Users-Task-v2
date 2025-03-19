@@ -9,62 +9,37 @@ router = APIRouter()
 db = Database(db_url=DATABASE_URL)
 
 
-@router.get('/users/')
+@router.get('/users/', response_model=BaseResponse)
 async def read_users():
-    try:
-        await db.connect()
-        users = await db.read_users()
-        return BaseResponse(status=True, body=list(users), error="null")
-
-    except Exception as e:
-        return BaseResponse(status=False, body="null", error=str(e))
-
-    finally:
-        await db.close()
+    await db.connect()
+    users = await db.read_users()
+    await db.close()
+    return BaseResponse(data=list(users))
 
 
-
-@router.post('/users/')
-async def create_user(user : Users):
-    try:
-        await db.connect()
-        await db.create_user(user.fullname, user.username, user.email, user.password)
-        return BaseResponse(status=True, body=dict(user), error="null")
-
-    except Exception as e:
-        return BaseResponse(status=False, body="null", error=str(e))
-
-    finally:
-        await db.close()
+@router.post('/users/', response_model=BaseResponse)
+async def create_user(user: Users):
+    await db.connect()
+    await db.create_user(user.fullname, user.username, user.email, user.password)
+    await db.close()
+    return BaseResponse(data=dict(user))
 
 
-
-@router.put('/users/{user_id}')
+@router.put('/users/{user_id}', response_model=BaseResponse)
 async def update_user(user: Users, user_id: int):
-    try:
-        await db.connect()
-        await db.update_user(user_id, user.fullname, user.username, user.email, user.password)
-        return BaseResponse(status=True, body=f"User with id {user_id} updated successfully", error="null")
-
-    except Exception as e:
-        return BaseResponse(status=False, body="null", error=str(e))
-
-    finally:
-        await db.close()
+    await db.connect()
+    await db.update_user(user_id, user.fullname, user.username, user.email, user.password)
+    await db.close()
+    return BaseResponse(data=f"User with id {user_id} updated successfully")
 
 
-@router.delete('/users/{user_id}')
+
+@router.delete('/users/{user_id}', response_model=BaseResponse)
 async def delete_user(user_id: int):
-    try:
         await db.connect()
         await db.delete_user(user_id)
-        return BaseResponse(status=True, body=f"User with id {user_id} deleted successfully", error="null")
-
-    except Exception as e:
-        return BaseResponse(status=False, body="null", error=str(e))
-
-    finally:
         await db.close()
+        return BaseResponse(data=f"User with id {user_id} deleted successfully")
 
 
 app.include_router(router, prefix="/api", tags=["Users CRUD API"])
