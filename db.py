@@ -79,6 +79,17 @@ class Database:
             else:
                 return []
 
+    async def read_user_detail(self, user_id):
+        async with self.pool.acquire() as connection:
+            try:
+                user = await connection.fetch("SELECT * FROM users WHERE id=$1", user_id)
+                if not user:
+                    return "Does not exists"
+                return user[0]
+            except Exception as e:
+                print(f"Error retrieving user details: {e}")
+                return None
+
     async def delete_user(self, user_id: int):
         """
         Delete a user from the database by user_id.
