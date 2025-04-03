@@ -1,0 +1,33 @@
+services:
+  web:
+    build: .
+    container_name: fastapi-crud
+    command: sh -c "uvicorn main:app --reload --port=8000 --host=0.0.0.0"
+    depends_on:
+      fast:
+        condition: service_healthy
+    ports:
+      - 8001:8000
+    volumes:
+      - .:/app
+
+  fast:
+    container_name: fastapi_users_v2
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: fastapi_users_v2
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1901
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    name: postgres_data
