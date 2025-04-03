@@ -9,9 +9,6 @@ DB_PASSWD = os.getenv('DB_PASSWD')
 DB_HOST = os.getenv('DB_HOST')
 DB_PORT = os.getenv('DB_PORT')
 
-
-if not all([DB_NAME, DB_USER, DB_PASSWD, DB_HOST, DB_PORT]):
-    raise ValueError("One or more database environment variables are missing!")
-
 # DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
 DATABASE_URL = 'postgresql://neondb_owner:npg_cg7aQHGX1RxE@ep-broad-voice-a1pj6w14-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require'
