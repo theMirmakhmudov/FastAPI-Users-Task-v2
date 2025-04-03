@@ -16,11 +16,10 @@ services:
   fast:
     container_name: fastapi_users_v2
     image: postgres:latest
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: fastapi_users_v2
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1901
-      DATABASE_URL: postgresql://postgres:1901@fast:5432/fastapi_users_v2
+      DATABASE_URL: ${DATABASE_URL}
     ports:
       - "5432:5432"
     volumes:
