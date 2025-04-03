@@ -1,5 +1,8 @@
 name: Postgres Service Example
-on: push
+on:
+  push:
+    branches:
+      - main  # 'main' branch uchun ishlaydi
 
 jobs:
   runner-job:
@@ -7,15 +10,15 @@ jobs:
 
     services:
       postgres:
-        image: postgres:13  # PostgreSQL imijini ishlatish
+        image: postgres:13
         env:
-          POSTGRES_USER: ${{ secrets.DB_USER }}   # GitHub Secrets orqali o'qiladi
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWD }}  # GitHub Secrets orqali o'qiladi
-          POSTGRES_DB: ${{ secrets.DB_NAME }}  # GitHub Secrets orqali o'qiladi
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWD }}
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
         ports:
           - 5432:5432  # PostgreSQL default port
         options: >-
-          --health-cmd="pg_isready -U ${{ secrets.DB_USER }}"  # Tayyorligini tekshiradi
+          --health-cmd="pg_isready -U ${{ secrets.DB_USER }}"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -41,6 +44,13 @@ jobs:
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
           echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
           echo "DB_PASSWD=${{ secrets.DB_PASSWD }}" >> $GITHUB_ENV
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          while ! pg_isready -h localhost -p 5432 -U ${{ secrets.DB_USER }}; do
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 2
+          done
 
       - name: Test with pytest
         run: |
