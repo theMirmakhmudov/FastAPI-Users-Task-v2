@@ -1,4 +1,4 @@
-name: SQL Service Example
+name: Postgres Service Example
 on: push
 
 jobs:
