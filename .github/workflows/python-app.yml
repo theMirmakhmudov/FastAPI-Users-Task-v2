@@ -43,6 +43,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 1
           POSTGRES_DB: testdb
+          DATABASE_URL: postgresql://postgres:1901@fast:5432/testdb
 
       - name: Test with pytest
         run: |

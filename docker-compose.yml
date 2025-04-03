@@ -12,8 +12,6 @@ services:
       - "8001:8000"
     volumes:
       - .:/app
-    environment:
-      DATABASE_URL: postgresql://postgres:1901@fast:5432/fastapi_users_v2
 
   fast:
     container_name: fastapi_users_v2
@@ -22,6 +20,7 @@ services:
       POSTGRES_DB: fastapi_users_v2
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1901
+      DATABASE_URL: postgresql://postgres:1901@fast:5432/fastapi_users_v2
     ports:
       - "5432:5432"
     volumes:
