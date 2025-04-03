@@ -1,3 +1,5 @@
+version: "3.10"
+
 services:
   web:
     build: .
@@ -7,9 +9,11 @@ services:
       fast:
         condition: service_healthy
     ports:
-      - 8001:8000
+      - "8000:8000"
     volumes:
       - .:/app
+    environment:
+      DATABASE_URL: postgresql://postgres:1901@fast:5432/fastapi_users_v2
 
   fast:
     container_name: fastapi_users_v2
