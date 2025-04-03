@@ -9,6 +9,7 @@ DB_PASSWD = os.getenv('DB_PASSWD')
 DB_HOST = os.getenv('DB_HOST')
 DB_PORT = os.getenv('DB_PORT')
 
+
 if not all([DB_NAME, DB_USER, DB_PASSWD, DB_HOST, DB_PORT]):
     raise ValueError("One or more database environment variables are missing!")
 
