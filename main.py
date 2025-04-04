@@ -24,7 +24,7 @@ async def read_user_detail(user_id: int):
     return BaseResponse(data=dict(user_detail))
 
 
-@router.post('/user/', response_model=BaseResponse)
+@router.post('/users/', response_model=BaseResponse)
 async def create_user(user: Users):
     await db.connect()
     await db.create_user(user.fullname, user.username, user.email, user.password)
@@ -47,10 +47,6 @@ async def delete_user(user_id: int):
         await db.delete_user(user_id)
         await db.close()
         return BaseResponse(data=f"User with id {user_id} deleted successfully")
-
-@router.get('/usersses/')
-async def read_users():
-    return {"message": "Hello, World!"}
 
 
 app.include_router(router, prefix="/api", tags=["Users CRUD API"])
