@@ -63,4 +63,4 @@ jobs:
             pip install -r requirements.txt
 
             # FastAPI serverini ishga tushurish
-            uvicorn main:app --host ${{secrets.SERVER_HOST}} --port 8000 --reload
+            uvicorn main:app --host ${{secrets.SERVER_HOST}} --port 8001 --reload
