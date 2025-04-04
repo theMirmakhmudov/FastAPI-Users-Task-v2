@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  fastapi_ci:
+  django_ci:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -29,7 +29,7 @@ jobs:
 
   deploy_aiogram:
     runs-on: ubuntu-latest
-    needs: fastapi_ci
+    needs: django_ci
 
     steps:
       - name: Checkout repository
@@ -44,7 +44,7 @@ jobs:
           script: |
             set -e 
             
-            REPO_DIR="."
+            REPO_DIR="app"
 
             if [ ! -d "$REPO_DIR" ]; then
               git clone https://github.com/theMirmakhmudov/FastAPI-Users-Task-v2.git $REPO_DIR
