@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  fastapi_ci:
+  django_ci:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,12 +25,11 @@ jobs:
 
       - name: Run Tests
         run: |
-          pytest  # Ensure you have tests in place, using pytest
+          pytest
 
   deploy_fastapi:
     runs-on: ubuntu-latest
-    needs: fastapi_ci  # Ensures the CI tests pass before deployment
-
+    needs: django_ci
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -38,35 +37,43 @@ jobs:
       - name: Deploy FastAPI
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
+          host: ${{ secrets.SERVER_HOST }}  # GitHub Secrets orqali IP manzilini yoki domenni olamiz
+          username: ${{ secrets.SERVER_USER }}  # GitHub Secrets orqali server foydalanuvchi nomi
+          key: ${{ secrets.SERVER_SSH_KEY }}  # GitHub Secrets orqali SSH kaliti
           script: |
             set -e
 
-            REPO_DIR="app"
+            # Define the full path to the app directory
+            REPO_DIR="/root/app"
 
-            # Clone or update the repo if it exists
+            # Check if the app directory exists
             if [ ! -d "$REPO_DIR" ]; then
+              echo "App directory not found, cloning repository..."
               git clone https://github.com/theMirmakhmudov/FastAPI-Users-Task-v2.git $REPO_DIR
             else
               cd $REPO_DIR
-              git pull origin master  # Pull the latest changes
+              echo "App directory found, pulling latest changes..."
+              git pull origin master
             fi
+
             cd $REPO_DIR
 
-            # Set up a virtual environment if not already created
+            # Set up virtual environment if not already created
             if [ ! -d "venv" ]; then
+              echo "Setting up virtual environment..."
               python3 -m venv venv
             fi
+
             source venv/bin/activate
             pip install --upgrade pip
             pip install -r requirements.txt
 
             # Check if a FastAPI app is already running with Uvicorn and kill it if needed
             if pgrep -f "uvicorn"; then
+              echo "Stopping existing FastAPI app..."
               pkill -f "uvicorn"
             fi
 
             # Start the FastAPI app using Uvicorn in the background
+            echo "Starting FastAPI app with Uvicorn..."
             nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload &
