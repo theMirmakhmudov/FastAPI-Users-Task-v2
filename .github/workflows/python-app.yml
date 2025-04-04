@@ -34,9 +34,6 @@ jobs:
           echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env
           echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> .env
 
-      - name: Run Migrations
-        run: |
-          python manage.py migrate
       - name: Run Tests
         run: |
           pytest
