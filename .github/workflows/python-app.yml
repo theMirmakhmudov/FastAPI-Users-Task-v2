@@ -45,7 +45,7 @@ jobs:
           script: |
             set -e 
             
-            REPO_DIR="app"
+            REPO_DIR="."
 
             if [ ! -d "$REPO_DIR" ]; then
               git clone https://github.com/theMirmakhmudov/FastAPI-Users-Task-v2.git $REPO_DIR
