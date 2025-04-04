@@ -105,5 +105,3 @@ class Database:
         if self.pool:
             await self.pool.close()
             print("Database connection pool closed")
-
-
