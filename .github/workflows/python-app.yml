@@ -43,10 +43,10 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             set -e 
-            
+
             REPO_DIR="fastapi-app"
 
-            # Check if the directory exists or not
+            # Clone or update the repository
             if [ ! -d "$REPO_DIR" ]; then
               echo "Cloning repository into $REPO_DIR..."
               git clone https://github.com/theMirmakhmudov/FastAPI-Users-Task-v2.git $REPO_DIR
@@ -81,35 +81,8 @@ jobs:
             pip install --upgrade pip
             pip install -r requirements.txt
 
-            # Create systemd service file (optional)
-            echo "Creating systemd service for FastAPI..."
-
-            cat <<EOF | sudo tee /etc/systemd/system/fastapi.service
-[Unit]
-Description=FastAPI Application
-After=network.target
-
-[Service]
-User=${{ secrets.SERVER_USER }}
-Group=${{ secrets.SERVER_USER }}
-WorkingDirectory=$PWD
-ExecStart=$PWD/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000
-Restart=always
-Environment="PATH=$PWD/venv/bin"
-Environment="PYTHONUNBUFFERED=1"
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-            # Reload systemd to recognize the new service
-            sudo systemctl daemon-reload
-
-            # Start or restart the FastAPI service
+            # Start FastAPI using systemd
+            echo "Starting FastAPI service..."
             sudo systemctl restart fastapi.service
 
-            # Enable the service to start on boot
-            sudo systemctl enable fastapi.service
-
-            echo "Successfully deployed and FastAPI app is running as a service."
-
+            echo "Successfully deployed"
