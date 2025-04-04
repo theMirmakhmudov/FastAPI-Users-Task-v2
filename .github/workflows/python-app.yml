@@ -83,6 +83,7 @@ jobs:
 
             # Start FastAPI using systemd
             echo "Starting FastAPI service..."
+            sudo systemctl daemon-reload
             sudo systemctl restart fastapi.service
 
             echo "Successfully deployed"

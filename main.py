@@ -48,5 +48,9 @@ async def delete_user(user_id: int):
         await db.close()
         return BaseResponse(data=f"User with id {user_id} deleted successfully")
 
+@router.get('/usersses/')
+async def read_users():
+    return {"message": "Hello, World!"}
+
 
 app.include_router(router, prefix="/api", tags=["Users CRUD API"])
