@@ -44,7 +44,7 @@ jobs:
           script: |
             set -e 
             
-            REPO_DIR="app"
+            REPO_DIR="FastAPI-Users-Task-v2"  # O'zgartirish: bu yerda repozitoriyani to'g'ri nomlash
 
             if [ ! -d "$REPO_DIR" ]; then
               git clone https://github.com/theMirmakhmudov/FastAPI-Users-Task-v2.git $REPO_DIR
@@ -53,7 +53,8 @@ jobs:
               git pull origin master
             fi
             cd $REPO_DIR
-            
+
+            # Virtual muhit yaratish va o'rnatish
             if [ ! -d "venv" ]; then
               python3 -m venv venv
             fi
@@ -61,5 +62,5 @@ jobs:
             pip install --upgrade pip
             pip install -r requirements.txt
 
-            # Run FastAPI app (assuming you have a command for running your FastAPI server)
-            uvicorn main:app --host ${{secrets.SERVER_HOST}} --port 8000 --reload
+            # FastAPI serverini ishga tushurish
+            uvicorn main:app --host 0.0.0.0 --port 8000 --reload
