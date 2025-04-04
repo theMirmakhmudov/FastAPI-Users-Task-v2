@@ -27,7 +27,7 @@ jobs:
         run: |
           pytest
 
-  deploy_fastapi:
+  deploy_aiogram:
     runs-on: ubuntu-latest
     needs: fastapi_ci
 
