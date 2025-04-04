@@ -46,18 +46,43 @@ jobs:
             
             REPO_DIR="fastapi-app"
 
+            # Check if the directory exists or not
             if [ ! -d "$REPO_DIR" ]; then
+              echo "Cloning repository into $REPO_DIR..."
               git clone https://github.com/theMirmakhmudov/FastAPI-Users-Task-v2.git $REPO_DIR
             else
+              echo "Repository already exists, pulling the latest changes..."
               cd $REPO_DIR
               git pull origin master
+              cd ..
             fi
+
+            # Check if the repo directory exists after clone/pull
+            if [ ! -d "$REPO_DIR" ]; then
+              echo "Error: The directory '$REPO_DIR' does not exist after cloning or pulling the repository."
+              exit 1
+            fi
+
+            # Navigate into the repository directory
+            echo "Navigating into $REPO_DIR directory..."
             cd $REPO_DIR
-            
+
+            # Create virtual environment if it doesn't exist
             if [ ! -d "venv" ]; then
+              echo "Creating virtual environment..."
               python3 -m venv venv
             fi
+
+            # Activate the virtual environment
             source venv/bin/activate
+
+            # Install dependencies
+            echo "Installing dependencies..."
             pip install --upgrade pip
             pip install -r requirements.txt
+
+            # Run FastAPI app with uvicorn in the background
+            echo "Running FastAPI app..."
+            nohup uvicorn main:app --host 0.0.0.0 --port 8000 &  # Runs FastAPI app in the background
+
             echo "Successfully deployed"
