@@ -26,6 +26,7 @@ jobs:
       - name: Run Tests
         run: |
           pytest
+          
 
   fastapi_cd:
     runs-on: ubuntu-latest
