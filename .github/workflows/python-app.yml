@@ -50,7 +50,7 @@ jobs:
               git clone https://github.com/theMirmakhmudov/FastAPI-Users-Task-v2.git $REPO_DIR
             else
               cd $REPO_DIR
-              git pull origin main
+              git pull origin master
             fi
             cd $REPO_DIR
             
