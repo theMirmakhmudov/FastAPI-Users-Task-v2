@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  django_ci:
+  fastapi_ci:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,11 +25,11 @@ jobs:
 
       - name: Run Tests
         run: |
-          pytest
+          pytest  # Ensure you have tests in place, using pytest
 
-  deploy_aiogram:
+  deploy_fastapi:
     runs-on: ubuntu-latest
-    needs: django_ci
+    needs: fastapi_ci  # Ensures the CI tests pass before deployment
 
     steps:
       - name: Checkout repository
@@ -42,21 +42,31 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            set -e 
-            
+            set -e
+
             REPO_DIR="app"
 
+            # Clone or update the repo if it exists
             if [ ! -d "$REPO_DIR" ]; then
               git clone https://github.com/theMirmakhmudov/FastAPI-Users-Task-v2.git $REPO_DIR
             else
               cd $REPO_DIR
-              git pull origin master
+              git pull origin master  # Pull the latest changes
             fi
             cd $REPO_DIR
-            
+
+            # Set up a virtual environment if not already created
             if [ ! -d "venv" ]; then
               python3 -m venv venv
             fi
             source venv/bin/activate
             pip install --upgrade pip
             pip install -r requirements.txt
+
+            # Check if a FastAPI app is already running with Uvicorn and kill it if needed
+            if pgrep -f "uvicorn"; then
+              pkill -f "uvicorn"
+            fi
+
+            # Start the FastAPI app using Uvicorn in the background
+            nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload &
