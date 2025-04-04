@@ -83,9 +83,6 @@ jobs:
 
             # Start FastAPI using systemd
             echo "Starting FastAPI service..."
-            sudo systemctl stop fastapi.service
-            sudo systemctl disable fastapi.service
-            sudo systemctl start fastapi.service
-            sudo systemctl enable fastapi.service
+            sudo systemctl restart fastapi.service
 
-            echo "Deployment completed successfully!
+            echo "Successfully deployed"
