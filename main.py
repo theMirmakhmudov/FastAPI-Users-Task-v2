@@ -24,7 +24,7 @@ async def read_user_detail(user_id: int):
     return BaseResponse(data=dict(user_detail))
 
 
-@router.post('/users/', response_model=BaseResponse)
+@router.post('/user/', response_model=BaseResponse)
 async def create_user(user: Users):
     await db.connect()
     await db.create_user(user.fullname, user.username, user.email, user.password)
