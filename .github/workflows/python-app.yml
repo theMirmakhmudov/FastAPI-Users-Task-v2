@@ -24,7 +24,7 @@ jobs:
           script: |
             set -e 
 
-            REPO_DIR="app"
+            REPO_DIR="fastapi_users_v2"
 
             if [ ! -d "$REPO_DIR" ]; then
               # Ensure the repo is cloned properly
